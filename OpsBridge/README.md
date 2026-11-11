@@ -68,4 +68,4 @@ python -m pytest -v
 
 ## Limites desta versão
 
-Protótipo de portfólio, não pronto para produção. Não tem autenticação, permissões, migrações Alembic, tratamento de auditoria por utilizador, nem notificações Make. Não coloques dados sensíveis reais. Para produção serão necessários autenticação e controlos de acesso, migrações, monitorização e deploy seguro.
+Protótipo de portfólio, não pronto para produção. Não tem autenticação, permissões, migrações Alembic, tratamento de auditoria por utilizador, nem notificações Make. Não coloques dados sensíveis reais. This project was developed with the assistance of ChatGPT. The application was tested locally to validate its core functionality.
