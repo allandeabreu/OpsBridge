@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OpsBridge — IT Support</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-symbol">◈</span><span>Ops<span class="brand-accent">Bridge</span><small>IT SUPPORT WORKSPACE</small></span></div>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav aria-label="Menu principal">
+        <a class="nav-link active" href="/ui"><span class="nav-icon">▦</span> Dashboard</a>
+        <a class="nav-link" href="/docs" target="_blank" rel="noopener"><span class="nav-icon">⌘</span> API Explorer <span class="external">↗</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="status-dot-wrap"><span class="live-dot"></span> Sistema local</div>
+        <small>OpsBridge • Portfolio project<br>FastAPI + SQLite</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong>Overview</strong></div><div class="top-right"><span class="date-label" id="today"></span><span class="avatar">OB</span></div></header>
+      <div class="content">
+        <div class="page-head"><div><p class="eyebrow">OPERATIONS OVERVIEW</p><h1>Support dashboard</h1><p class="subtitle">Gere pedidos, acompanha prioridades e mantém a equipa alinhada.</p></div><button class="btn primary" id="newTicket">+ Novo ticket</button></div>
+
+        <section class="metrics" aria-label="Métricas">
+          <div class="metric-card"><div class="metric-top"><span>Tickets totais</span><span class="metric-icon blue">▦</span></div><strong id="statTotal">—</strong><span class="metric-note">Registos na plataforma</span></div>
+          <div class="metric-card"><div class="metric-top"><span>Em aberto</span><span class="metric-icon violet">◷</span></div><strong id="statOpen">—</strong><span class="metric-note">Por acompanhar</span></div>
+          <div class="metric-card"><div class="metric-top"><span>Críticos ativos</span><span class="metric-icon red">!</span></div><strong id="statCritical">—</strong><span class="metric-note">Requerem prioridade</span></div>
+          <div class="metric-card"><div class="metric-top"><span>Resolvidos</span><span class="metric-icon green">✓</span></div><strong id="statResolved">—</strong><span class="metric-note">A aguardar fecho</span></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Gestão de tickets</h2><p>Pesquisa, filtra e gere os pedidos de suporte.</p></div><button class="btn subtle" id="refreshButton">↻ Atualizar</button></div>
+          <div class="filters">
+            <label class="search-wrap"><span>⌕</span><input id="search" type="search" placeholder="Pesquisar por título, descrição ou colaborador" aria-label="Pesquisar tickets"></label>
+            <select id="statusFilter" aria-label="Filtrar por estado"><option value="">Todos os estados</option><option value="new">Novo</option><option value="in_progress">Em curso</option><option value="waiting">Em espera</option><option value="resolved">Resolvido</option><option value="closed">Fechado</option><option value="cancelled">Cancelado</option></select>
+            <select id="priorityFilter" aria-label="Filtrar por prioridade"><option value="">Todas as prioridades</option><option value="low">Baixa</option><option value="medium">Média</option><option value="high">Alta</option><option value="critical">Crítica</option></select>
+            <select id="categoryFilter" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option><option value="hardware">Hardware</option><option value="software">Software</option><option value="network">Rede</option><option value="access">Acessos</option></select>
+          </div>
+          <div class="table-scroll"><table><thead><tr><th>TICKET</th><th>CATEGORIA</th><th>PRIORIDADE</th><th>ESTADO</th><th>RESPONSÁVEL</th><th>CRIADO</th><th></th></tr></thead><tbody id="ticketRows"><tr><td colspan="7" class="empty">A carregar tickets…</td></tr></tbody></table></div>
+          <div class="table-footer"><span id="ticketCount">—</span><span>Seleciona um ticket para ver os detalhes</span></div>
+        </section>
+        <p class="footnote">Ambiente de demonstração local. Dados guardados em SQLite.</p>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="ticketModal" class="modal"><form id="ticketForm" novalidate>
+    <div class="modal-head"><div><p class="eyebrow" id="modalEyebrow">NOVO PEDIDO</p><h2 id="modalTitle">Criar ticket</h2></div><button type="button" class="icon-btn" id="closeModal" aria-label="Fechar">×</button></div>
+    <div class="modal-body">
+      <label>Título <input required minlength="3" maxlength="150" name="title" placeholder="Ex.: VPN não funciona"></label>
+      <label>Descrição <textarea required minlength="3" name="description" rows="3" maxlength="5000" placeholder="Descreve o problema em detalhe"></textarea></label>
+      <div class="field-pair"><label>Categoria <select required name="category"><option value="hardware">Hardware</option><option value="software">Software</option><option value="network">Rede</option><option value="access">Acessos</option></select></label><label>Prioridade <select required name="priority"><option value="low">Baixa</option><option value="medium" selected>Média</option><option value="high">Alta</option><option value="critical">Crítica</option></select></label></div>
+      <label id="requesterField">Colaborador solicitante <input required minlength="2" maxlength="100" name="requester" placeholder="Nome de quem solicita"></label>
+      <div id="editFields" hidden><div class="field-pair"><label>Estado <select name="status"><option value="new">Novo</option><option value="in_progress">Em curso</option><option value="waiting">Em espera</option><option value="resolved">Resolvido</option><option value="closed">Fechado</option><option value="cancelled">Cancelado</option></select></label><label>Técnico atribuído <input name="assigned_to" maxlength="100" placeholder="Nome do técnico"></label></div><div class="history-section"><h3>Histórico de alterações</h3><div id="historyList" class="history-list"></div></div></div>
+      <p id="formError" class="error-message" role="alert" hidden></p>
+    </div>
+    <div class="modal-actions"><button class="btn danger-text" type="button" id="cancelTicket" hidden>Cancelar ticket</button><span class="spacer"></span><button class="btn outline" type="button" id="cancelModal">Voltar</button><button class="btn primary" type="submit" id="saveTicket">Criar ticket</button></div>
+  </form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
