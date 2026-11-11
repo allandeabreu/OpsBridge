@@ -66,6 +66,21 @@ python -m pytest -v
 
 `app/api` recebe pedidos HTTP; `app/services` valida regras de negócio; `app/repositories` executa queries SQLAlchemy; `app/models` modela tabelas; `app/schemas` valida os dados. Os testes isolam uma BD SQLite temporária.
 
+## Future Improvements
+
+The OpsBridge MVP is functional, with ticket management, status tracking, technician assignment, an interactive dashboard, and automated API tests.
+
+The following improvements are planned for future development:
+
+- [ ] **Workflow Automation:** Integrate with Make or Microsoft Power Automate using webhooks to automatically notify IT teams when critical tickets are created.
+- [ ] **Email Notifications:** Send automatic notifications when tickets are assigned, updated, or resolved.
+- [ ] **User Authentication:** Implement secure login and role-based access control for employees, IT technicians, and administrators.
+- [ ] **AI-Powered Ticket Classification:** Explore automatic categorization and prioritization of incoming requests using AI.
+- [ ] **Advanced Analytics:** Expand the dashboard with resolution times, ticket trends, and operational performance indicators.
+- [ ] **Deployment:** Deploy the application to a cloud environment for remote access and demonstration.
+
+These improvements are part of the project's roadmap and are not included in the current MVP.
+
 ## Limites desta versão
 
 Protótipo de portfólio, não pronto para produção. Não tem autenticação, permissões, migrações Alembic, tratamento de auditoria por utilizador, nem notificações Make. Não coloques dados sensíveis reais. This project was developed with the assistance of ChatGPT. The application was tested locally to validate its core functionality.
